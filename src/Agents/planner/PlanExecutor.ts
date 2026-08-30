@@ -56,7 +56,7 @@ export class PlanExecutor {
       totalSteps: plan.totalSteps,
       dryRun: options.dryRun || false,
       hashVerification: options.verifyHash || false,
-      durable: options.durable || true,
+      durable: options.durable || false,
     });
 
     // Verify plan hash before execution if enabled
@@ -72,8 +72,8 @@ export class PlanExecutor {
       }
     }
 
-    // Use durable execution by default unless dryRun is requested
-    if (options.durable !== false && !options.dryRun) {
+    // Use durable execution if explicitly requested and not in dryRun mode
+    if (options.durable === true && !options.dryRun) {
       const execution = await durableExecutor.startExecution(plan, userId);
       return {
         planId: plan.planId,
